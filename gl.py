@@ -329,7 +329,7 @@ class Render(object):
                 offset-=2*dx
 
     #Barycentric Coordinates
-    def triangle_bc(self, Ax, Bx, Cx, Ay, By, Cy, Az, Bz, Cz, tax, tbx, tcx, tay, tby, tcy, colorest = WHITE):
+    def triangle_bc(self, Ax, Bx, Cx, Ay, By, Cy, Az, Bz, Cz, tax, tbx, tcx, tay, tby, tcy, normals=(), colorest = WHITE):
         #bounding box
         minX = min(Ax, Bx, Cx)
         minY = min(Ay, By, Cy)
@@ -347,15 +347,15 @@ class Render(object):
                     z = Az * u + Bz * v + Cz * w
                     
                     if z > self.zbuffer[y][x]:
-
-                        b, g , r = colorest
+                        
+                        """b, g , r = colorest or sef.curr_color
                         b /= 255
                         g /= 255
                         r /= 255
 
-                        """b *= intensity
+                        b *= intensity
                         g *= intensity
-                        r *= intensity"""
+                        r *= intensity
                         #misma operacion de coordenadas bc cuando hay textura en eje x y y
                         if self.active_texture:
                             tx = tax * u + tbx * v + tcx * w
@@ -364,7 +364,17 @@ class Render(object):
                             texColor = self.active_texture.getColor(tx, ty)
                             b *= texColor[0] / 255
                             g *= texColor[1] / 255
-                            r *= texColor[2] / 255
+                            r *= texColor[2] / 255"""
+                        
+                        r, g, b = self.active_shader(
+                            self,
+                            verts=(Ax, Bx, Cx, Ay, By, Cy, Az, Bz, Cz),
+                            baryCoords=(u,v,w),
+                            texCoords=(tax, tbx, tcx, tay, tby, tcy),
+                            normals=normals,
+                            color = colorest or self.curr_color)
+                        
+                       
 
                         self.glVertex_coord(x, y, color(r,g,b))
                         self.zbuffer[y][x] = z
@@ -412,9 +422,9 @@ class Render(object):
 
     def loadModel(self, filename, translate, scale, isWireframe = False): #funcion para crear modelo Obj
         model = Obj(filename)
-        lightx=0
+        """lightx=0
         lighty=0
-        lightz=1
+        lightz=1"""
 
         for face in model.faces:
             vertCount = len(face) #conexion entre vertices para crear Wireframe
@@ -471,7 +481,6 @@ class Render(object):
                 #print((self.cross(self.subtract(x1, x0, y1, y0, z1, z0), self.subtract(x2, x0, y2, y0, z2, z0)))/(self.frobenius(self.cross(self.subtract(x1, x0, y1, y0, z1, z0), self.subtract(x2, x0, y2, y0, z2, z0)))))
                 print(self.division(self.cross(self.subtract(x1, x0, y1, y0, z1, z0), self.subtract(x2, x0, y2, y0, z2, z0)),self.frobenius(self.cross(self.subtract(x1, x0, y1, y0, z1, z0), self.subtract(x2, x0, y2, y0, z2, z0))) ))
                 """
-
                 #----------FORMULA CON FUNCIONES POR MI---------------
                #normal=productoCruz(V1-V0, v2-V0)/Frobenius
 
@@ -499,6 +508,12 @@ class Render(object):
                     vt2y=0
                     vt3x=0
                     vt3y=0
+                
+                vn0 = model.normals[face[0][2] - 1]
+                vn1 = model.normals[face[1][2] - 1]
+                vn2 = model.normals[face[2][2] - 1]
+                if vertCount > 3:
+                    vn3 = model.normals[face[3][2] - 1]
 
 
                 #normalMI=self.division(self.cross(self.subtract(x1, x0, y1, y0, z1, z0), self.subtract(x2, x0, y2, y0, z2, z0)),self.frobenius(self.cross(self.subtract(x1, x0, y1, y0, z1, z0), self.subtract(x2, x0, y2, y0, z2, z0))) )
@@ -512,8 +527,8 @@ class Render(object):
                 #if intensity >=0:
                     
                 if vertCount > 3:
-                    self.triangle_bc(x0,x2,x3, y0, y2,y3, z0, z2,z3, vt0x, vt2x,vt3x, vt0y,  vt2y, vt3y )
-                self.triangle_bc(x0,x1,x2, y0, y1, y2, z0, z1, z2, vt0x ,  vt1x,vt2x,vt0y,vt1y,  vt2y)
+                    self.triangle_bc(x0,x2,x3, y0, y2,y3, z0, z2,z3, vt0x, vt2x,vt3x, vt0y,  vt2y, vt3y , normals=(vn0,vn2,vn3))
+                self.triangle_bc(x0,x1,x2, y0, y1, y2, z0, z1, z2, vt0x ,  vt1x,vt2x,vt0y,vt1y, vt2y, normals = (vn0,vn1,vn2))
 
 
            

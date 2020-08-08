@@ -8,6 +8,7 @@ Main
 
 from gl import Render
 from obj import Obj, Texture
+from shaders import *
 
 #valores con los que se inicializan la ventana y viewport
 
@@ -25,6 +26,10 @@ r = Render(width,height)
 #r.loadModel('./models/objBarrel.obj', (500,500,0), (300,300,300), t)
 
 r.active_texture = Texture('./models/model.bmp')
+
+r.active_shader = gourad
+
+r.lightx, r.lighty, r.lightz=1,0,0
 
 r.loadModel('./models/model.obj', (500,500,0), (300,300,300))
 
