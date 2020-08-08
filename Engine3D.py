@@ -27,9 +27,9 @@ r = Render(width,height)
 
 r.active_texture = Texture('./models/model.bmp')
 
-r.active_shader = gourad
+r.active_shader = toon
 
-r.lightx, r.lighty, r.lightz=1,0,0
+#r.lightx, r.lighty, r.lightz=1,0,0
 
 r.loadModel('./models/model.obj', (500,500,0), (300,300,300))
 
