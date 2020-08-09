@@ -372,7 +372,8 @@ class Render(object):
                             baryCoords=(u,v,w),
                             texCoords=(tax, tbx, tcx, tay, tby, tcy),
                             normals=normals,
-                            color = colorest or self.curr_color)
+                            color = colorest or self.curr_color,
+                            coordy=(y,x))
                         
                        
 

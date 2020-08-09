@@ -27,7 +27,7 @@ r = Render(width,height)
 
 r.active_texture = Texture('./models/model.bmp')
 #r.active_texture = Texture('./models/earth.bmp')
-r.active_shader = rainbow
+r.active_shader = toon
 
 #r.lightx, r.lighty, r.lightz=1,0,0
 
