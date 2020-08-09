@@ -33,7 +33,7 @@ class Obj(object):
                     prefix, value = line.split(' ', 1)
                 except:
                     continue
-                    
+
                 if prefix == 'v': # vertices
                     self.vertices.append(list(map(float,value.split(' '))))
                 elif prefix == 'vn': #normales
@@ -77,8 +77,8 @@ class Texture(object):
     #funcion para obtener color 
     def getColor(self, tx, ty):
         if tx >= 0 and tx <= 1 and ty >= 0 and ty <= 1:
-            x = int(tx * self.width)
-            y = int(ty * self.height)
+            x = int(tx * self.width-1)
+            y = int(ty * self.height-1)
 
             return self.pixels[y][x]
         else:

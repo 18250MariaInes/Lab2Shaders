@@ -26,12 +26,13 @@ r = Render(width,height)
 #r.loadModel('./models/objBarrel.obj', (500,500,0), (300,300,300), t)
 
 r.active_texture = Texture('./models/model.bmp')
-
-r.active_shader = toon
+#r.active_texture = Texture('./models/earth.bmp')
+r.active_shader = rainbow
 
 #r.lightx, r.lighty, r.lightz=1,0,0
 
 r.loadModel('./models/model.obj', (500,500,0), (300,300,300))
+#r.loadModel('./models/earth.obj', (500,500,0), (1,1,1))
 
 r.glFinish('output.bmp')
 #r.glZBuffer('zbuffer.bmp')
