@@ -332,3 +332,91 @@ def checkered(render, **kwargs):
     else:
         return 0,0,0
 
+def static_jupiter(render, **kwargs):
+
+    u, v, w = kwargs['baryCoords']
+    tax, tbx, tcx, tay, tby, tcy = kwargs['texCoords']
+    na, nb, nc = kwargs['normals']
+    b, g, r = kwargs['color']
+
+    b /= 255
+    g /= 255
+    r /= 255
+
+    if render.active_texture:
+        tx = tax * u + tbx * v + tcx * w
+        ty = tay * u + tby * v + tcy * w
+        texColor = render.active_texture.getColor(tx, ty)
+        b *= texColor[0] / 255
+        g *= texColor[1] / 255
+        r *= texColor[2] / 255
+
+    nx = na[0] * u + nb[0] * v + nc[0] * w
+    ny = na[1] * u + nb[1] * v + nc[1] * w
+    nz = na[2] * u + nb[2] * v + nc[2] * w
+
+    normal = (nx, ny, nz)
+    #producto punto de las funciones que sustituyen a numpy
+    intensity = render.dot(normal, render.lightx,render.lighty,render.lightz )
+
+    #print(intensity)
+    b *= intensity
+    g *= intensity
+    r *= intensity
+
+    prob=random.randint(1,4)
+    #print(prob)
+    if intensity > 0 and prob==2:
+        return r, g, b
+    elif intensity > 0 and prob==1:
+        return r, 0, 0
+    elif intensity > 0 and prob==3:
+        return 0, g, 0
+    elif intensity > 0 and prob==4:
+        return 0, 0, b
+    else:
+        return 0,0,0
+
+def stripes_neptune(render, **kwargs):
+    Ax, Bx, Cx, Ay, By, Cy, Az, Bz, Cz=kwargs['verts']
+    u, v, w = kwargs['baryCoords']
+    tax, tbx, tcx, tay, tby, tcy = kwargs['texCoords']
+    na, nb, nc = kwargs['normals']
+    b, g, r = kwargs['color']
+    y,x=kwargs['coordy']
+
+    #print(y)
+
+    b /= 255
+    g /= 255
+    r /= 255
+
+    if render.active_texture:
+        tx = tax * u + tbx * v + tcx * w
+        ty = tay * u + tby * v + tcy * w
+        
+        texColor = render.active_texture.getColor(tx, ty)
+        b *= texColor[0] / 255
+        g *= texColor[1] / 255
+        r *= texColor[2] / 255
+
+    nx = na[0] * u + nb[0] * v + nc[0] * w
+    ny = na[1] * u + nb[1] * v + nc[1] * w
+    nz = na[2] * u + nb[2] * v + nc[2] * w
+    
+
+
+    normal = (nx, ny, nz)
+#producto punto de las funciones que sustituyen a numpy
+    intensity = render.dot(normal, render.lightx,render.lighty,render.lightz )
+
+    b *= intensity
+    g *= intensity
+    r *= intensity
+    #print(render.frobenius(normal))
+    if intensity > 0:
+        if y%15<1:
+            return r,g,round((y%50)/50)
+        return r,g,b
+    else:
+        return 0,0,0
